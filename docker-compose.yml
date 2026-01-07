@@ -19,3 +19,13 @@ services:
     volumes:
       - ./backend:/app
       - /app/node_modules
+
+  db:
+    image: postgres:16
+    container_name: db
+    environment:
+      POSTGRES_USER: masafumi
+      POSTGRES_PASSWORD: Tm107348
+      POSTGRES_DB: todo_db
+    ports:
+      - "5432:5432"
