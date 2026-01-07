@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useEffect, useState } from "react";
 
 interface Todo {
@@ -20,10 +21,16 @@ function App() {
     loadTodos();
   }, []);
 
-  const handleAddTodo = () => {
-    if (title.trim()) {
-      setTodos([...todos, { id: todos.length + 1, title, completed: false }]);
+  const handleAddTodo = async () => {
+    if (!title.trim()) return;
+    try {
+      const res = await axios.post("http://localhost:3000/todos", { title });
+      const newTodo = res.data.todo;
+      setTodos([...todos, newTodo]);
       setTitle("");
+      console.log("新しいTodoが追加されました:", newTodo);
+    } catch (error) {
+      console.error("Failed to add todo:", error);
     }
   };
 
