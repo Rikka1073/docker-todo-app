@@ -1,4 +1,6 @@
 import { serve } from "@hono/node-server";
+import { PrismaPg } from "@prisma/adapter-pg";
+import { PrismaClient } from "@prisma/client/extension";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 
@@ -12,6 +14,14 @@ const todos: Todo[] = [];
 
 const app = new Hono();
 
+const adapter = new PrismaPg({
+  connectionString: process.env.DATABASE_URL!,
+});
+
+const prisma = new PrismaClient({
+  adapter,
+});
+
 app.use(
   cors({
     origin: "http://localhost:5173",
@@ -23,7 +33,7 @@ app.get("/", (c) => {
 });
 
 app.get("/todos", (c) => {
-  return c.json({ todos });
+  return prisma.post.json({ todos });
 });
 
 app.post("/todos", async (c) => {
