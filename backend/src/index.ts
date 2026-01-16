@@ -1,8 +1,9 @@
 import { serve } from "@hono/node-server";
 import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "@prisma/client/extension";
+
 import { Hono } from "hono";
 import { cors } from "hono/cors";
+import { PrismaClient } from "./generated/prisma/client.js";
 
 interface Todo {
   id: number;
@@ -33,7 +34,8 @@ app.get("/", (c) => {
 });
 
 app.get("/todos", (c) => {
-  return prisma.post.json({ todos });
+  const todos = prisma.post.findMany();
+  return c.json(todos);
 });
 
 app.post("/todos", async (c) => {
